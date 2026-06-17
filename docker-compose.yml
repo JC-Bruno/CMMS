@@ -1,0 +1,53 @@
+name: cmms-enterprise
+
+services:
+  postgres-control:
+    image: postgres:16-alpine
+    container_name: cmms_postgres_control
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_CONTROL_DB:-cmms_control}
+      POSTGRES_USER: ${POSTGRES_CONTROL_USER:-cmms_user}
+      POSTGRES_PASSWORD: ${POSTGRES_CONTROL_PASSWORD:-cmms_password}
+    ports:
+      - "${POSTGRES_CONTROL_PORT:-5432}:5432"
+    volumes:
+      - cmms_postgres_control_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_CONTROL_USER:-cmms_user} -d ${POSTGRES_CONTROL_DB:-cmms_control}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-client-template:
+    image: postgres:16-alpine
+    container_name: cmms_postgres_client_template
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_CLIENT_TEMPLATE_DB:-cmms_client_template}
+      POSTGRES_USER: ${POSTGRES_CLIENT_TEMPLATE_USER:-cmms_user}
+      POSTGRES_PASSWORD: ${POSTGRES_CLIENT_TEMPLATE_PASSWORD:-cmms_password}
+    ports:
+      - "${POSTGRES_CLIENT_TEMPLATE_PORT:-5433}:5432"
+    volumes:
+      - cmms_postgres_client_template_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_CLIENT_TEMPLATE_USER:-cmms_user} -d ${POSTGRES_CLIENT_TEMPLATE_DB:-cmms_client_template}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: cmms_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - cmms_redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  cmms_postgres_control_data:
+  cmms_postgres_client_template_data:
+  cmms_redis_data:
