@@ -1,5 +1,5 @@
 import pytest
-
+from uuid import uuid4
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
@@ -30,45 +30,46 @@ from .transitions import (
 
 
 def _create_asset():
+    suffix = uuid4().hex[:8]
+
     company = location_node_create(
-        code="company",
+        code=f"company_{suffix}",
         name="Grupo Monelca",
         node_type=LocationNodeType.COMPANY,
     )
     site = location_node_create(
-        code="site_sv",
+        code=f"site_sv_{suffix}",
         name="El Salvador",
         node_type=LocationNodeType.SITE,
         parent=company,
     )
     facility = location_node_create(
-        code="plant_opico",
+        code=f"plant_opico_{suffix}",
         name="Planta Opico",
         node_type=LocationNodeType.FACILITY,
         parent=site,
     )
     area = location_node_create(
-        code="area_cutting",
+        code=f"area_cutting_{suffix}",
         name="Área de corte",
         node_type=LocationNodeType.AREA,
         parent=facility,
     )
     location = location_node_create(
-        code="loc_plasma_01",
+        code=f"loc_plasma_01_{suffix}",
         name="Ubicación plasma CNC 01",
         node_type=LocationNodeType.LOCATION,
         parent=area,
     )
 
     return asset_create(
-        code="PLASMA-01",
+        code=f"PLASMA-{suffix}",
         name="CNC Plasma 01",
         location=location,
         asset_type=AssetType.EQUIPMENT,
         status=AssetStatus.ACTIVE,
         criticality=AssetCriticality.HIGH,
     )
-
 
 def _create_work_order_with_assignee():
     asset = _create_asset()

@@ -21,7 +21,7 @@ PRIORITY_MAP_FROM_REQUEST = {
 }
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_create_manual(
     *,
     asset,
@@ -64,7 +64,7 @@ def work_order_create_manual(
     return work_order
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_create_from_request(
     *,
     maintenance_request,

@@ -5,7 +5,7 @@ from .choices import WorkOrderStatus
 from .models import WorkOrderAssignee
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_assign_technician(
     *,
     work_order,

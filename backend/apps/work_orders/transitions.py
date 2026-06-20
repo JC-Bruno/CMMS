@@ -18,7 +18,7 @@ def _ensure_has_active_assignee(*, work_order):
         )
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_start(*, work_order):
     _ensure_has_active_assignee(work_order=work_order)
 
@@ -41,7 +41,7 @@ def work_order_start(*, work_order):
     return work_order
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_put_on_hold(*, work_order, reason):
     if work_order.status != WorkOrderStatus.IN_PROGRESS:
         raise ValidationError(
@@ -56,7 +56,7 @@ def work_order_put_on_hold(*, work_order, reason):
     return work_order
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_technical_close(
     *,
     work_order,
@@ -100,7 +100,7 @@ def work_order_technical_close(
     return work_order
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_close_final(*, work_order):
     if work_order.status != WorkOrderStatus.TECHNICALLY_CLOSED:
         raise ValidationError(
@@ -115,7 +115,7 @@ def work_order_close_final(*, work_order):
     return work_order
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def work_order_cancel(*, work_order, reason):
     if work_order.status in [
         WorkOrderStatus.CLOSED,

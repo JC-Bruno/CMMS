@@ -7,10 +7,10 @@ from .models import (
     MaintenanceRequestSource,
     MaintenanceRequestStatus,
 )
-from ..work_orders.numbering import generate_request_number
+from .numbering import generate_request_number
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def maintenance_request_create(
     *,
     asset,
@@ -51,7 +51,7 @@ def maintenance_request_create(
     return request
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def maintenance_request_mark_received(*, request):
     request.status = MaintenanceRequestStatus.RECEIVED
     request.received_at = timezone.now()
@@ -61,7 +61,7 @@ def maintenance_request_mark_received(*, request):
     return request
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def maintenance_request_reject(*, request, reason):
     request.status = MaintenanceRequestStatus.REJECTED
     request.rejected_at = timezone.now()
@@ -79,7 +79,7 @@ def maintenance_request_reject(*, request, reason):
     return request
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def maintenance_request_cancel(*, request, reason):
     request.status = MaintenanceRequestStatus.CANCELLED
     request.cancelled_at = timezone.now()
@@ -97,7 +97,7 @@ def maintenance_request_cancel(*, request, reason):
     return request
 
 
-@transaction.atomic
+@transaction.atomic(using="client_template")
 def maintenance_request_mark_converted(*, request):
     request.status = MaintenanceRequestStatus.CONVERTED_TO_WORK_ORDER
     request.converted_at = timezone.now()
