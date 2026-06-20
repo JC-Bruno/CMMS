@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     #local apps
     'apps.core',
     'apps.tenancy',
-    'apps.accounts'
+    'apps.accounts',
+    'apps.assets',
 ]
 
 MIDDLEWARE = [
