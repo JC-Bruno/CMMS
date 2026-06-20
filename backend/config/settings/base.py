@@ -73,7 +73,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -82,8 +81,20 @@ DATABASES = {
         "PASSWORD": env("POSTGRES_CONTROL_PASSWORD", default="cmms_password"),
         "HOST": env("POSTGRES_CONTROL_HOST", default="localhost"),
         "PORT": env("POSTGRES_CONTROL_PORT", default="5432"),
-    }
+    },
+    "client_template": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("POSTGRES_CLIENT_TEMPLATE_DB", default="cmms_client_template"),
+        "USER": env("POSTGRES_CLIENT_TEMPLATE_USER", default="cmms_user"),
+        "PASSWORD": env("POSTGRES_CLIENT_TEMPLATE_PASSWORD", default="cmms_password"),
+        "HOST": env("POSTGRES_CLIENT_TEMPLATE_HOST", default="localhost"),
+        "PORT": env("POSTGRES_CLIENT_TEMPLATE_PORT", default="5433"),
+    },
 }
+
+DATABASE_ROUTERS = [
+    "config.database_routers.CMMSDatabaseRouter",
+]
 
 
 # Password validation
