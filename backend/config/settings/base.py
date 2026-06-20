@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'apps.tenancy',
     'apps.accounts',
     'apps.assets',
+    'apps.maintenance_requests',
 ]
 
 MIDDLEWARE = [
