@@ -1,13 +1,13 @@
 from django.utils import timezone
 
-from .models import MaintenanceRequest
+from .models import WorkOrder
 
 
-def generate_request_number():
+def generate_work_order_number():
     today = timezone.localdate()
-    prefix = f"MR-{today:%Y%m%d}"
+    prefix = f"WO-{today:%Y%m%d}"
 
-    today_count = MaintenanceRequest.objects.filter(
+    today_count = WorkOrder.objects.filter(
         created_at__date=today,
     ).count()
 

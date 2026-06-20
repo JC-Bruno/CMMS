@@ -7,7 +7,7 @@ from .models import (
     MaintenanceRequestSource,
     MaintenanceRequestStatus,
 )
-from .numbering import generate_request_number
+from ..work_orders.numbering import generate_request_number
 
 
 @transaction.atomic

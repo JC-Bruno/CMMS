@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.assets',
     'apps.maintenance_requests',
+    'apps.work_orders',
 ]
 
 MIDDLEWARE = [
