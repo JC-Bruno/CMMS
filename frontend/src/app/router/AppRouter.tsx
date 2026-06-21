@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { AppLayout } from "../layouts/AppLayout";
-import { AssetsListPage } from "../../modules/assets/pages/AssetsListPage";
-import { DashboardPage } from "../../modules/dashboard/pages/DashboardPage";
-import { InventoryPage } from "../../modules/inventory/pages/InventoryPage";
-import { MaintenanceRequestsListPage } from "../../modules/maintenance-requests/pages/MaintenanceRequestsListPage";
-import { SettingsPage } from "../../modules/settings/pages/SettingsPage";
-import { WorkOrdersListPage } from "../../modules/work-orders/pages/WorkOrdersListPage";
-import { PageHeader } from "../../shared/components/PageHeader";
+import { AppLayout } from "@app/layouts/AppLayout";
+import { PageHeader } from "@shared/components";
+import { AssetsListPage } from "@modules/assets/pages/AssetsListPage";
+import { DashboardPage } from "@modules/dashboard/pages/DashboardPage";
+import { InventoryPage } from "@modules/inventory/pages/InventoryPage";
+import { MaintenanceRequestsListPage } from "@modules/maintenance-requests/pages/MaintenanceRequestsListPage";
+import { SettingsPage } from "@modules/settings/pages/SettingsPage";
+import { WorkOrdersListPage } from "@modules/work-orders/pages/WorkOrdersListPage";
 
 function NotFoundPage() {
   return (

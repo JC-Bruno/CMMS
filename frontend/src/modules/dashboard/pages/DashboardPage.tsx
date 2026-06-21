@@ -1,7 +1,5 @@
-import { API_BASE_URL } from "../../../shared/api/httpClient";
-import { PageHeader } from "../../../shared/components/PageHeader";
-import { StatCard } from "../../../shared/components/StatCard";
-import { StatusBadge } from "../../../shared/components/StatusBadge";
+import { API_BASE_URL } from "@shared/api";
+import { PageHeader, StatCard, StatusBadge } from "@shared/components"
 
 const workOrders = [
   {
