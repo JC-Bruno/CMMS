@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 
-import { navigationItems } from "../navigation";
+import { navigationItems } from "@app/navigation";
 
 export function AppLayout() {
   return (

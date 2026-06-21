@@ -1,4 +1,4 @@
-import { PageHeader } from "../../../shared/components/PageHeader";
+import { PageHeader } from "@shared/components";
 
 const settingsBlocks = [
   {

@@ -1,5 +1,4 @@
-import { PageHeader } from "../../../shared/components/PageHeader";
-import { StatusBadge } from "../../../shared/components/StatusBadge";
+import { PageHeader, StatusBadge } from "@shared/components";
 
 const requests = [
   {

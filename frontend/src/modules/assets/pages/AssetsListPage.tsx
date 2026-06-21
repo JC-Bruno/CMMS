@@ -1,6 +1,4 @@
-import { EmptyState } from "../../../shared/components/EmptyState";
-import { PageHeader } from "../../../shared/components/PageHeader";
-import { StatusBadge } from "../../../shared/components/StatusBadge";
+import { EmptyState, PageHeader, StatusBadge } from "@shared/components";
 
 const assets = [
   {
