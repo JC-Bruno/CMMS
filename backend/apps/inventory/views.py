@@ -1,5 +1,7 @@
 from rest_framework import mixins, viewsets
 
+from apps.accounts.permissions import HasOperationalPermission
+
 from .models import (
     InventoryLocation,
     SparePart,
@@ -23,6 +25,12 @@ class SparePartCategoryViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SparePartCategorySerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "inventory.view_spare_part",
+        "retrieve": "inventory.view_spare_part",
+        "create": "inventory.create_spare_part",
+    }
 
     def get_queryset(self):
         return (
@@ -39,6 +47,12 @@ class SparePartViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SparePartSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "inventory.view_spare_part",
+        "retrieve": "inventory.view_spare_part",
+        "create": "inventory.create_spare_part",
+    }
 
     def get_queryset(self):
         return (
@@ -55,6 +69,12 @@ class InventoryLocationViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = InventoryLocationSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "inventory.view_inventory_location",
+        "retrieve": "inventory.view_inventory_location",
+        "create": "inventory.create_inventory_location",
+    }
 
     def get_queryset(self):
         return (
@@ -71,6 +91,12 @@ class SparePartStockViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SparePartStockSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "inventory.view_stock",
+        "retrieve": "inventory.view_stock",
+        "create": "inventory.create_stock",
+    }
 
     def get_queryset(self):
         return (
@@ -87,6 +113,12 @@ class StockMovementViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = StockMovementSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "inventory.view_stock_movement",
+        "retrieve": "inventory.view_stock_movement",
+        "create": "inventory.create_stock_movement",
+    }
 
     def get_queryset(self):
         return (

@@ -2,6 +2,8 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.accounts.permissions import HasOperationalPermission
+
 from .assignments import work_order_assign_technician
 from .labor import work_order_labor_entry_create
 from .models import WorkOrder
@@ -30,6 +32,20 @@ class WorkOrderViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = WorkOrderSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "work_orders.view_work_order",
+        "retrieve": "work_orders.view_work_order",
+        "create": "work_orders.create_work_order",
+        "from_request": "maintenance_requests.convert_to_work_order",
+        "assign_technician": "work_orders.assign_technician",
+        "start": "work_orders.start_work_order",
+        "put_on_hold": "work_orders.put_on_hold",
+        "technical_close": "work_orders.technical_close",
+        "close_final": "work_orders.final_close",
+        "cancel": "work_orders.cancel_work_order",
+        "labor_entries": "work_orders.add_labor_entry",
+    }
 
     def get_queryset(self):
         return (
