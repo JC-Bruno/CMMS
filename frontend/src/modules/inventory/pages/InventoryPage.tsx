@@ -1,4 +1,5 @@
 import { PageHeader, StatusBadge } from "@shared/components";
+import { PermissionGate } from "@modules/auth/components/PermissionGate";
 
 const spareParts = [
   {
@@ -24,7 +25,11 @@ export function InventoryPage() {
         eyebrow="Inventario"
         title="Repuestos y existencias"
         description="Base visual para repuestos, almacenes, existencias y movimientos."
-        actions={<button className="button button--primary">Nuevo repuesto</button>}
+       actions={
+        <PermissionGate permission="inventory.create_spare_part">
+          <button className="button button--primary">Nuevo repuesto</button>
+        </PermissionGate>
+        }
       />
 
       <article className="panel">

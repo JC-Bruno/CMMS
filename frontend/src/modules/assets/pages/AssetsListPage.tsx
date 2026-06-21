@@ -1,4 +1,5 @@
 import { EmptyState, PageHeader, StatusBadge } from "@shared/components";
+import { PermissionGate } from "@modules/auth/components/PermissionGate";
 
 const assets = [
   {
@@ -20,11 +21,15 @@ const assets = [
 export function AssetsListPage() {
   return (
     <section className="page">
-      <PageHeader
+      <PageHeader 
         eyebrow="Activos"
-        title="Equipos e infraestructura"
-        description="Listado base para equipos, infraestructura y ubicaciones técnicas."
-        actions={<button className="button button--primary">Nuevo activo</button>}
+        title="Lista de activos"
+        description="Base visual para la lista de activos"
+        actions={
+          <PermissionGate permission="assets.create_asset">
+            <button className="button button--primary">Nuevo activo</button>
+          </PermissionGate>
+        }
       />
 
       {assets.length > 0 ? (

@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@shared/api";
 import { PageHeader, StatCard, StatusBadge } from "@shared/components"
+import { PermissionGate } from "@modules/auth/components/PermissionGate";
 
 const workOrders = [
   {
@@ -26,11 +27,15 @@ export function DashboardPage() {
   return (
     <section className="page">
       <PageHeader
-        eyebrow="Dashboard"
-        title="Resumen general de mantenimiento"
-        description="Vista inicial del estado operativo del CMMS. En el siguiente flujo conectaremos estos bloques a la API real."
-        actions={<button className="button button--primary">Nueva solicitud</button>}
-      />
+      eyebrow="Reportes"
+      title="Dashboard"
+      description="Base visual para la creación de reportes"
+      actions={
+        <PermissionGate permission="maintenance_requests.create_request">
+          <button className="button button--primary">Nueva solicitud</button>
+        </PermissionGate>
+      }
+    />
 
       <div className="stats-grid">
         <StatCard label="Órdenes abiertas" value="18" helper="Pendientes de cierre" />
@@ -39,7 +44,7 @@ export function DashboardPage() {
         <StatCard label="Repuestos bajo mínimo" value="5" helper="Requieren revisión" />
       </div>
 
-      <div className="content-grid">
+      <div className="content-grid content-grid--single">
         <article className="panel panel--wide">
           <div className="panel__header">
             <div>
@@ -83,14 +88,6 @@ export function DashboardPage() {
               </tbody>
             </table>
           </div>
-        </article>
-
-        <article className="panel">
-          <h3 className="panel__title">Conexión API</h3>
-          <p className="panel__description">
-            Base configurada para consumir backend:
-          </p>
-          <code className="code-pill">{API_BASE_URL}</code>
         </article>
       </div>
     </section>

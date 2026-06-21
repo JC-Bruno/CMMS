@@ -1,5 +1,7 @@
 from pathlib import Path
 import environ
+from datetime import timedelta
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -34,6 +36,9 @@ CSRF_TRUSTED_ORIGINS = env.list(
     ],
 )
 
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "x-cmms-tenant-code",
+]
 
 # Application definition
 
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework_simplejwt.token_blacklist",
 
     #third party apps
     'rest_framework',
@@ -157,6 +163,9 @@ STATIC_URL = 'static/'
 # Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 # OpenAPI / Swagger documentation
@@ -165,4 +174,12 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API for CMMS Enterprise maintenance management system.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=8),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
 }

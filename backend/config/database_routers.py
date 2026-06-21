@@ -24,6 +24,7 @@ class CMMSDatabaseRouter:
         "core",
         "tenancy",
         "accounts",
+        "token_blacklist",
     }
 
     CLIENT_APP_LABELS = {

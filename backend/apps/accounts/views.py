@@ -1,12 +1,15 @@
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.accounts.permissions import (
     get_request_tenant,
     get_tenant_code_from_request,
     user_effective_permission_codes,
 )
+from apps.accounts.serializers import LogoutSerializer
 
 
 class CurrentUserView(APIView):
@@ -46,3 +49,16 @@ class CurrentUserView(APIView):
                 "permissions": permissions,
             }
         )
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        refresh_token = RefreshToken(serializer.validated_data["refresh"])
+        refresh_token.blacklist()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
