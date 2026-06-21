@@ -10,3 +10,7 @@ class CurrentUserSerializer(serializers.Serializer):
     is_superuser = serializers.BooleanField()
     tenant = serializers.DictField(allow_null=True)
     permissions = serializers.ListField(child=serializers.CharField())
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

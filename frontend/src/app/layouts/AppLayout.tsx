@@ -1,8 +1,31 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 import { navigationItems } from "@app/navigation";
+import { useAuth } from "@modules/auth/hooks/useAuth";
 
 export function AppLayout() {
+  const { user, tenantCode, logout, hasPermission } = useAuth();
+
+  const visibleNavigationItems = navigationItems.filter((item) => {
+    if (!item.requiredPermission) {
+      return true;
+    }
+
+    return hasPermission(item.requiredPermission);
+  });
+
+  const displayName =
+    [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
+    user?.username ||
+    "Usuario";
+
+  const initials = displayName
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -15,7 +38,7 @@ export function AppLayout() {
         </div>
 
         <nav className="sidebar__nav" aria-label="Navegación principal">
-          {navigationItems.map((item) => (
+          {visibleNavigationItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -39,7 +62,9 @@ export function AppLayout() {
 
         <div className="sidebar__footer">
           <p className="sidebar__footer-label">Cliente activo</p>
-          <p className="sidebar__footer-value">Plantilla cliente</p>
+          <p className="sidebar__footer-value">
+            {user?.tenant?.name || tenantCode || "Sin cliente"}
+          </p>
         </div>
       </aside>
 
@@ -59,12 +84,18 @@ export function AppLayout() {
             />
 
             <div className="topbar__user">
-              <div className="topbar__avatar">JB</div>
+              <div className="topbar__avatar">{initials}</div>
               <div>
-                <p className="topbar__user-name">Julio Bruno</p>
-                <p className="topbar__user-role">Mantenimiento</p>
+                <p className="topbar__user-name">{displayName}</p>
+                <p className="topbar__user-role">
+                  {user?.is_superuser ? "Administrador" : "Usuario CMMS"}
+                </p>
               </div>
             </div>
+
+            <button className="button button--secondary" onClick={logout}>
+              Salir
+            </button>
           </div>
         </header>
 

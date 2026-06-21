@@ -1,4 +1,5 @@
 import { PageHeader, StatusBadge } from "@shared/components";
+import { PermissionGate } from "@modules/auth/components/PermissionGate";
 
 const requests = [
   {
@@ -24,7 +25,11 @@ export function MaintenanceRequestsListPage() {
         eyebrow="Solicitudes"
         title="Reportes de falla"
         description="Vista para solicitudes creadas por supervisores o usuarios con permiso de reportar."
-        actions={<button className="button button--primary">Nueva solicitud</button>}
+        actions={
+          <PermissionGate permission="maintenance_requests.create_request">
+            <button className="button button--primary">Nueva solicitud</button>
+          </PermissionGate>
+        }
       />
 
       <article className="panel">

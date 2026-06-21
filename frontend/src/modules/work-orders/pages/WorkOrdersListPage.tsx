@@ -1,4 +1,5 @@
 import { PageHeader, StatusBadge } from "@shared/components";
+import { PermissionGate } from "@modules/auth/components/PermissionGate";
 
 const workOrders = [
   {
@@ -24,7 +25,11 @@ export function WorkOrdersListPage() {
         eyebrow="Órdenes de trabajo"
         title="Ejecución y seguimiento técnico"
         description="Base visual para creación, asignación, inicio, cierre técnico y cierre final de OT."
-        actions={<button className="button button--primary">Nueva OT</button>}
+        actions={
+          <PermissionGate permission="work_orders.create_work_order">
+            <button className="button button--primary">Nueva OT</button>
+          </PermissionGate>
+        }
       />
 
       <article className="panel">
