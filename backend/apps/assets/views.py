@@ -1,5 +1,7 @@
 from rest_framework import mixins, viewsets
 
+from apps.accounts.permissions import HasOperationalPermission
+
 from .models import Asset, AssetDocument, AssetLocationNode
 from .serializers import (
     AssetDocumentSerializer,
@@ -15,6 +17,12 @@ class AssetLocationNodeViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = AssetLocationNodeSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "assets.view_asset_location",
+        "retrieve": "assets.view_asset_location",
+        "create": "assets.create_asset_location",
+    }
 
     def get_queryset(self):
         return (
@@ -31,6 +39,12 @@ class AssetViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = AssetSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "assets.view_asset",
+        "retrieve": "assets.view_asset",
+        "create": "assets.create_asset",
+    }
 
     def get_queryset(self):
         return (
@@ -47,6 +61,12 @@ class AssetDocumentViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = AssetDocumentSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "assets.view_asset_document",
+        "retrieve": "assets.view_asset_document",
+        "create": "assets.create_asset_document",
+    }
 
     def get_queryset(self):
         return (

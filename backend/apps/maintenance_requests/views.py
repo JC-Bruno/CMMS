@@ -2,6 +2,8 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.accounts.permissions import HasOperationalPermission
+
 from .models import MaintenanceRequest
 from .serializers import (
     MaintenanceRequestReasonSerializer,
@@ -21,6 +23,15 @@ class MaintenanceRequestViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = MaintenanceRequestSerializer
+    permission_classes = [HasOperationalPermission]
+    permission_required_by_action = {
+        "list": "maintenance_requests.view_request",
+        "retrieve": "maintenance_requests.view_request",
+        "create": "maintenance_requests.create_request",
+        "receive": "maintenance_requests.receive_request",
+        "reject": "maintenance_requests.reject_request",
+        "cancel": "maintenance_requests.cancel_request",
+    }
 
     def get_queryset(self):
         return (
