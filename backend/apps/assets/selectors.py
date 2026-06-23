@@ -1,5 +1,5 @@
 from .models import Asset, AssetDocument, AssetLocationNode
-
+from apps.assets.models import AssetStructureNode
 
 def location_node_list(*, include_deleted=False):
     queryset = AssetLocationNode.objects.all()
@@ -59,3 +59,13 @@ def asset_document_list(*, asset, include_deleted=False):
         queryset = queryset.filter(deleted_at__isnull=True)
 
     return queryset.order_by("document_type", "title")
+
+def asset_structure_node_list():
+    return (
+        AssetStructureNode.objects.select_related(
+            "asset",
+            "parent",
+        )
+        .filter(deleted_at__isnull=True)
+        .order_by("asset__code", "sort_order", "code")
+    )

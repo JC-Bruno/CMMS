@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from apps.assets.models import AssetStructureNode
 from .models import Asset, AssetDocument, AssetLocationNode
 
 
@@ -101,3 +101,18 @@ class AssetDocumentAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+
+@admin.register(AssetStructureNode)
+class AssetStructureNodeAdmin(admin.ModelAdmin):
+    list_display = (
+        "code",
+        "name",
+        "asset",
+        "parent",
+        "node_type",
+        "is_maintainable",
+        "sort_order",
+    )
+    list_filter = ("node_type", "is_maintainable", "asset")
+    search_fields = ("code", "name", "asset__code", "asset__name")
+    ordering = ("asset__code", "sort_order", "code")
