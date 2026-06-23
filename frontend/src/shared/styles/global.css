@@ -692,3 +692,58 @@ a {
   width: 100%;
   margin-top: 6px;
 }
+
+.feedback-state {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  padding: 32px;
+  text-align: center;
+}
+
+.feedback-state__spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: cmms-spin 800ms linear infinite;
+}
+
+.feedback-state__icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.feedback-state__title {
+  margin: 14px 0 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.feedback-state__description {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.feedback-state--error {
+  border-color: var(--color-danger-soft);
+}
+
+@keyframes cmms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
