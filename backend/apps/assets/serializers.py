@@ -3,6 +3,11 @@ from rest_framework import serializers
 from .models import Asset, AssetDocument, AssetLocationNode
 from .services import asset_create, asset_document_create, location_node_create
 
+from apps.assets.models import Asset, AssetStructureNode
+from apps.assets.services import (
+    asset_structure_node_create,
+    asset_structure_node_update,
+)
 
 class AssetLocationNodeSerializer(serializers.ModelSerializer):
     parent_id = serializers.PrimaryKeyRelatedField(
@@ -153,4 +158,54 @@ class AssetDocumentSerializer(serializers.ModelSerializer):
             document_uri=validated_data["document_uri"],
             description=validated_data.get("description", ""),
             issued_at=validated_data.get("issued_at"),
+        )
+    
+class AssetStructureNodeSerializer(serializers.ModelSerializer):
+    asset_code = serializers.CharField(source="asset.code", read_only=True)
+    asset_name = serializers.CharField(source="asset.name", read_only=True)
+    parent_code = serializers.CharField(source="parent.code", read_only=True)
+    parent_name = serializers.CharField(source="parent.name", read_only=True)
+
+    class Meta:
+        model = AssetStructureNode
+        fields = (
+            "id",
+            "asset",
+            "asset_code",
+            "asset_name",
+            "parent",
+            "parent_code",
+            "parent_name",
+            "node_type",
+            "code",
+            "name",
+            "description",
+            "is_maintainable",
+            "sort_order",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = (
+            "id",
+            "asset_code",
+            "asset_name",
+            "parent_code",
+            "parent_name",
+            "created_at",
+            "updated_at",
+        )
+
+    def create(self, validated_data):
+        return asset_structure_node_create(**validated_data)
+
+    def update(self, instance, validated_data):
+        return asset_structure_node_update(
+            node=instance,
+            parent=validated_data.get("parent"),
+            node_type=validated_data["node_type"],
+            code=validated_data["code"],
+            name=validated_data["name"],
+            description=validated_data.get("description", ""),
+            is_maintainable=validated_data.get("is_maintainable", False),
+            sort_order=validated_data.get("sort_order", 0),
         )

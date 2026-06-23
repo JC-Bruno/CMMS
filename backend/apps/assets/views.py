@@ -9,6 +9,11 @@ from .serializers import (
     AssetSerializer,
 )
 
+from apps.assets.models import AssetStructureNode
+from apps.assets.selectors import asset_structure_node_list
+from apps.assets.serializers import AssetStructureNodeSerializer
+from apps.assets.services import asset_structure_node_soft_delete
+
 
 class AssetLocationNodeViewSet(
     mixins.ListModelMixin,
@@ -74,3 +79,22 @@ class AssetDocumentViewSet(
             .filter(deleted_at__isnull=True)
             .order_by("-created_at")
         )
+    
+class AssetStructureNodeViewSet(viewsets.ModelViewSet):
+    serializer_class = AssetStructureNodeSerializer
+    permission_classes = [HasOperationalPermission]
+
+    permission_required_by_action = {
+        "list": "assets.view_asset",
+        "retrieve": "assets.view_asset",
+        "create": "assets.create_asset",
+        "update": "assets.change_asset",
+        "partial_update": "assets.change_asset",
+        "destroy": "assets.delete_asset",
+    }
+
+    def get_queryset(self):
+        return asset_structure_node_list()
+
+    def perform_destroy(self, instance: AssetStructureNode):
+        asset_structure_node_soft_delete(node=instance)

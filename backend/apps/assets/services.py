@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
-
+from django.utils import timezone
+from apps.assets.models import Asset, AssetStructureNode
 from .models import Asset, AssetDocument, AssetLocationNode
 
 
@@ -100,3 +101,59 @@ def asset_soft_delete(*, asset):
     asset.save(update_fields=["deleted_at", "updated_at"])
 
     return asset
+
+def asset_structure_node_create(
+    *,
+    asset: Asset,
+    node_type: str,
+    code: str,
+    name: str,
+    parent: AssetStructureNode | None = None,
+    description: str = "",
+    is_maintainable: bool = False,
+    sort_order: int = 0,
+) -> AssetStructureNode:
+    node = AssetStructureNode(
+        asset=asset,
+        parent=parent,
+        node_type=node_type,
+        code=code,
+        name=name,
+        description=description,
+        is_maintainable=is_maintainable,
+        sort_order=sort_order,
+    )
+    node.full_clean()
+    node.save()
+
+    return node
+
+
+def asset_structure_node_update(
+    *,
+    node: AssetStructureNode,
+    parent: AssetStructureNode | None,
+    node_type: str,
+    code: str,
+    name: str,
+    description: str,
+    is_maintainable: bool,
+    sort_order: int,
+) -> AssetStructureNode:
+    node.parent = parent
+    node.node_type = node_type
+    node.code = code
+    node.name = name
+    node.description = description
+    node.is_maintainable = is_maintainable
+    node.sort_order = sort_order
+
+    node.full_clean()
+    node.save()
+
+    return node
+
+
+def asset_structure_node_soft_delete(*, node: AssetStructureNode) -> None:
+    node.deleted_at = timezone.now()
+    node.save(update_fields=["deleted_at", "updated_at"])

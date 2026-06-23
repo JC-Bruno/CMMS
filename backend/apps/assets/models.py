@@ -2,6 +2,10 @@ import uuid
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models import Q
+
+from apps.assets.choices import AssetStructureNodeType
 
 
 asset_code_validator = RegexValidator(
@@ -297,6 +301,80 @@ class Asset(models.Model):
                 }
             )
 
+class AssetStructureNode(models.Model):
+    asset = models.ForeignKey(
+        Asset,
+        on_delete=models.CASCADE,
+        related_name="structure_nodes",
+    )
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        related_name="children",
+        null=True,
+        blank=True,
+    )
+    node_type = models.CharField(
+        max_length=40,
+        choices=AssetStructureNodeType.choices,
+    )
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=180)
+    description = models.TextField(blank=True)
+    is_maintainable = models.BooleanField(default=False)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["asset__code", "sort_order", "code"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["asset", "code"],
+                condition=Q(deleted_at__isnull=True),
+                name="unique_active_asset_structure_code_per_asset",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.asset.code} / {self.code} - {self.name}"
+
+    def clean(self):
+        if self.parent and self.parent.asset_id != self.asset_id:
+            raise ValidationError(
+                "El nodo padre debe pertenecer al mismo activo."
+            )
+
+        if self.node_type == AssetStructureNodeType.SUBSYSTEM and self.parent_id is not None:
+            raise ValidationError(
+                "Un subsistema debe depender directamente del activo y no debe tener padre."
+            )
+
+        if self.node_type == AssetStructureNodeType.COMPONENT:
+            if self.parent is None:
+                raise ValidationError(
+                    "Un componente debe depender de un subsistema."
+                )
+
+            if self.parent.node_type != AssetStructureNodeType.SUBSYSTEM:
+                raise ValidationError(
+                    "Un componente solo puede depender de un subsistema."
+                )
+
+        if self.node_type == AssetStructureNodeType.MAINTAINABLE_POINT:
+            if self.parent is None:
+                raise ValidationError(
+                    "Un punto mantenible debe depender de un componente."
+                )
+
+            if self.parent.node_type != AssetStructureNodeType.COMPONENT:
+                raise ValidationError(
+                    "Un punto mantenible solo puede depender de un componente."
+                )
+
+            self.is_maintainable = True
 
 class AssetDocument(models.Model):
     id = models.UUIDField(
